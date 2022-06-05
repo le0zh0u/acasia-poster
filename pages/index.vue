@@ -187,7 +187,6 @@ export default Vue.extend({
     // 如果选中的播客发生变化，需要重新构建播客logo的配置
     podcastList(newList, oldList) {
       if(newList == oldList) return ;
-      console.log(newList)
       const list:PodcastLogoInfo[] = newList.sort((a:number, b:number) => {
         return a - b
       }).map((item:number, index:number) => {
@@ -205,7 +204,7 @@ export default Vue.extend({
 
       const startTime = moment(newTimeArr[0]).format('YYYY/MM/DD HH:mm')
       var endTime = ''
-      if(moment(newTimeArr[0]).dayOfYear === moment(newTimeArr[1]).dayOfYear){
+      if(moment(newTimeArr[0]).diff(moment(newTimeArr[1]),'days') == 0){
         // 同一天
          endTime = moment(newTimeArr[1]).format('HH:mm')
       } else {
@@ -285,7 +284,6 @@ export default Vue.extend({
 
     // 重置图片大小
     zoomReset(id:number) {
-      console.log(this.podcastLogoImageList)
       const filterResult = this.podcastLogoImageList.filter(item => {
         return item.id === id
       })
