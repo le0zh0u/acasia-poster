@@ -459,8 +459,8 @@ h1 {
 
       .time {
         font-size: 2vh;
-        color: #fff;
-        /* color: #ccc; */
+        /* color: #fff; */
+        color: #ccc;
       }
 
 .el-form-item {
