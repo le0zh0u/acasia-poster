@@ -14,6 +14,7 @@
         </div>
         <div class="poster-content">
           <div class="topic" :style="{'font-size': 3.5 * topicFontSize + 'vh'}">{{ topic }}</div>
+          <div v-if="topicDescList.length > 0 && topicDescList[0].value != ''" v-for="(topicDesc, index) in topicDescList" :key="index" class="sub-topic" :style="{'font-size': 2.5 * topicDescFontSize + 'vh'}">{{ topicDesc.value }}</div>
           <div class="time">{{ time }}</div>
         </div>
       </div>
@@ -64,6 +65,15 @@
         <el-form-item label="串台主题">
           <el-input v-model="topic" />
         </el-form-item>
+        <el-form-item label="主题描述">
+          <el-button icon="el-icon-plus" @click="addTopicDesc()" circle></el-button>
+        </el-form-item>
+        <el-form-item v-for="(topicDesc, index) in topicDescList" :key="index" :label="'第'+(index+1)+'行'">
+        <div class="topic-desc-item">
+            <el-input v-model="topicDesc.value" />
+            <el-button icon="el-icon-minus" @click="minusTopicDesc(index)" type="danger" circle></el-button>
+            </div>
+        </el-form-item>
         <el-form-item label="直播时间">
           <el-date-picker
             v-model="pickerTime"
@@ -72,6 +82,8 @@
             end-placeholder="结束日期"
             :default-time="['20:00:00', '22:00:00']">
           </el-date-picker>
+        </el-form-item>
+        <el-form-item label="直播时间展示">
           <el-input v-model="time" />
         </el-form-item>
         <el-form-item label="字号调整（串台主题）">
@@ -83,6 +95,19 @@
               <i class="el-icon-zoom-out avatar-icon"></i>
             </a>
             <a href="javascript:;" @click="topicFontReset()">
+              <i class="el-icon-refresh-left avatar-icon"></i>
+            </a>
+          </div>
+        </el-form-item>
+        <el-form-item label="字号调整（主题描述）">
+          <div :span="12">
+            <a href="javascript:;" @click="topicDescFontAdd()">
+              <i class="el-icon-zoom-in avatar-icon"></i>
+            </a>
+            <a href="javascript:;" @click="topicDescFontMinus()">
+              <i class="el-icon-zoom-out avatar-icon"></i>
+            </a>
+            <a href="javascript:;" @click="topicDescFontReset()">
               <i class="el-icon-refresh-left avatar-icon"></i>
             </a>
           </div>
@@ -161,11 +186,14 @@ export default Vue.extend({
     return {
       // 串台主题
       topic: '', 
+      // 主题描述
+      topicDescList: [{value:''}],
       // 直播时间
       time: '',
       pickerTime:[],
       // 主题文字缩放
       topicFontSize: 1,
+      topicDescFontSize: 1,
 
       // 是否导出中
       isDownloading: false,
@@ -311,6 +339,28 @@ export default Vue.extend({
     topicFontReset() {
       this.topicFontSize = 1;
     },
+
+    // 放大主题描述文字
+    topicDescFontAdd() {
+      this.topicDescFontSize += 0.1;
+    },
+
+    // 缩小主题描述文字
+    topicDescFontMinus() {
+      this.topicDescFontSize -= 0.1;
+    },
+    // 重置主题描述文字大小
+    topicDescFontReset() {
+      this.topicDescFontSize = 1;
+    },
+
+    // 添加主题描述
+    addTopicDesc(){
+        this.topicDescList.push({value:''})
+    },
+    minusTopicDesc(index:number){
+      this.topicDescList.splice(index, 1)
+    }
   }
 })
 </script>
@@ -391,12 +441,20 @@ h1 {
 
       .topic {
         margin-bottom: 0.5vh;
-        font-size: 2.3vh;
+        font-size: 3.5vh;
         font-weight: bold;
         white-space: pre-line;
         word-break: break-all;
         word-wrap: break-word;
+      }
 
+      .sub-topic{
+        margin-bottom: 0.5vh;
+        font-size: 2.5vh;
+        /* font-weight: bold; */
+        white-space: pre-line;
+        word-break: break-all;
+        word-wrap: break-word;
       }
 
       .time {
@@ -406,10 +464,6 @@ h1 {
       }
 
 .el-form-item {
-  margin-bottom: 5px;
-}
-
-.el-form-item__label{
   margin-bottom: 5px;
 }
 
@@ -446,5 +500,13 @@ h1 {
 
 .logo-attribute{
   margin-bottom: 10px;
+}
+
+.topic-desc-item .el-input {
+  width: 50%;
+}
+
+.el-button.is-circle {
+  padding: 6px;
 }
 </style>
