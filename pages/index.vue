@@ -179,8 +179,8 @@ export default Vue.extend({
       return podcastInfoList
     },
     podcastNums(){
-      
-      return Number(this.podcastNum)
+      let s:string = this.podcastNum
+      return Number(s)
     }
   },
 
