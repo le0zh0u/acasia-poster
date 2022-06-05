@@ -2,92 +2,69 @@
   <el-row type="flex" class="poster-container" justify="center">
     <el-col :span="12">
       <div id="poster-preview"
-        :style="{'cursor': imageUrl ? 'move' : 'default'}"
-        @mousedown="mouseDown($event)"
-        @mousemove="mouseMove($event)"
-        @mouseup="mouseUp($event)"
+        :style="{'cursor': 'default'}"
       >
-        <img class="author-img" v-if="imageUrl" :src="imageUrl" ref="avatar"
-          :style="{'width': avatarPos.width + 'vh', 'height': avatarPos.height + 'vh', 'left': avatarPos.left + 'vh', 'top': avatarPos.top + 'vh'}"
-        >
         <div class="bg"></div>
-        <img class="poster-template" :src="'poster-template-' + lang + '.png'">
+        <img class="poster-template" :src="'poster-template.png'">
+        <img v-for="podcastLogoImage in podcastLogoImageList" class="podcast-logo-img" v-if="podcastLogoImageList.length > 0" :src="podcastLogoImage.logoPos" ref="avatar"
+          :style="{'width': podcastLogoImage.width + 'vh', 'height': podcastLogoImage.height + 'vh', 'left': podcastLogoImage.left + 'vh', 'top': podcastLogoImage.top + 'vh'}"
+        >
         <div class="poster-content">
-          <div class="title">{{ title }}</div>
-          <div class="name" :style="{'font-size': 3.7 * nameFontSize + 'vh'}">{{ name }}</div>
-          <div class="topic" :style="{'font-size': 2.3 * topicFontSize + 'vh'}">{{ topic }}</div>
+          <div class="topic" :style="{'font-size': 3.5 * topicFontSize + 'vh'}">{{ topic }}</div>
           <div class="time">{{ time }}</div>
-          <img class="keynote" :src="'keynote-' + lang + '.png'" v-if="isKeynote">
         </div>
       </div>
     </el-col>
     <el-col :span="8" class="poster-control" v-loading="isDownloading" element-loading-text="生成海报中">
       <el-row>
-        <h1>ApacheCon Asia 2021 海报生成器</h1>
-        <el-radio-group size="small" v-model="lang">
-          <el-radio-button label="zh"></el-radio-button>
-          <el-radio-button label="en"></el-radio-button>
+        <h1>技术播客月海报生成器</h1>
+        <p>串台播客数量</p><el-radio-group size="small" v-model="podcastNum">
+          <el-radio-button label="1"></el-radio-button>
+          <el-radio-button label="2"></el-radio-button>
+          <el-radio-button label="3"></el-radio-button>
         </el-radio-group>
       </el-row>
       <el-form>
-        <el-form-item label="论坛名称" id="track">
-          <el-autocomplete
-            v-model="track"
-            :fetch-suggestions="trackQuery"
-          ></el-autocomplete>
+        <el-form-item label="播客" id="podcast">
+          <el-select v-model="podcastList" multiple placeholder="请选择" :multiple-limit="podcastNums">
+            <el-option
+              v-for="item in podcastSelectorList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+          <el-collapse v-model="activePodcastLogos" v-if="podcastLogoImageList.length > 0">
+            <el-collapse-item v-for="podcastLogoImage in podcastLogoImageList" :key="podcastLogoImage.id" :title="podcastLogoImage.name" :name="podcastLogoImage.id">
+              <el-input placeholder="请输入宽度" v-model="podcastLogoImage.width" class="logo-attribute">
+                <template slot="prepend">Width:</template>
+                <template slot="append">vh</template>
+              </el-input>
+              <el-input placeholder="请输入内容" v-model="podcastLogoImage.height" class="logo-attribute">
+                <template slot="prepend">Height:</template>
+                <template slot="append">vh</template>
+              </el-input>
+              <el-input placeholder="请输入内容" v-model="podcastLogoImage.top" class="logo-attribute">
+                <template slot="prepend">Top:</template>
+                <template slot="append">vh</template>
+              </el-input>
+              <el-input placeholder="请输入内容" v-model="podcastLogoImage.left" class="logo-attribute">
+                <template slot="prepend">Left:</template>
+                <template slot="append">vh</template>
+              </el-input>
+              <el-button icon="el-icon-refresh-left" @click="zoomReset(podcastLogoImage.id)" circle></el-button>
+            </el-collapse-item>
+          </el-collapse>
         </el-form-item>
-        <el-form-item label="讲师姓名">
-          <el-autocomplete
-            v-model="name"
-            :fetch-suggestions="nameQuery"
-            @select="nameSelect"
-          ></el-autocomplete>
-        </el-form-item>
-        <el-form-item label="讲师职位">
-          <el-input v-model="title" />
-        </el-form-item>
-        <el-form-item :label="'讲师照片' + (imageUrl ? '（可在海报中拖动）' : '')">
-          <el-col :span="3">
-            <input type="file" ref="avatarInput" style="display:none"
-              @change="avatarChange"
-            />
-            <a class="avatar-uploader" href="javascript:;" @click="setAvatar()">
-              <i class="el-icon-plus avatar-icon"></i>
-            </a>
-          </el-col>
-          <el-col :span="9" class="icon-panel">
-            <a href="javascript:;" @click="zoomIn()">
-              <i class="el-icon-zoom-in avatar-icon" v-if="imageUrl"></i>
-            </a>
-            <a href="javascript:;" @click="zoomOut()">
-              <i class="el-icon-zoom-out avatar-icon" v-if="imageUrl"></i>
-            </a>
-            <a href="javascript:;" @click="zoomReset()">
-              <i class="el-icon-refresh-left avatar-icon" v-if="imageUrl"></i>
-            </a>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="演讲题目">
-          <el-checkbox v-model="isKeynote">主题演讲</el-checkbox>
+      </el-form>
+      <el-form>
+        <el-form-item label="串台主题">
           <el-input v-model="topic" />
         </el-form-item>
-        <el-form-item label="演讲时间">
+        <el-form-item label="直播时间">
           <el-input v-model="time" />
         </el-form-item>
-        <el-form-item label="字号调整（讲师姓名）">
-          <div :span="12">
-            <a href="javascript:;" @click="nameFontAdd()">
-              <i class="el-icon-zoom-in avatar-icon"></i>
-            </a>
-            <a href="javascript:;" @click="nameFontMinus()">
-              <i class="el-icon-zoom-out avatar-icon"></i>
-            </a>
-            <a href="javascript:;" @click="nameFontReset()">
-              <i class="el-icon-refresh-left avatar-icon"></i>
-            </a>
-          </div>
-        </el-form-item>
-        <el-form-item label="字号调整（演讲题目）">
+        <el-form-item label="字号调整（串台主题）">
           <div :span="12">
             <a href="javascript:;" @click="topicFontAdd()">
               <i class="el-icon-zoom-in avatar-icon"></i>
@@ -109,7 +86,7 @@
         </el-form-item>
 
         <el-form-item class="info">
-          <i class="el-icon-service"></i> 本工具由 <a href="http://github.com/Ovilia">@Ovilia</a> 开发，<a href="mailto:oviliazhang@gmail.com">问题反馈</a>
+          <i class="el-icon-service"></i> 本工具由 <a href="https://github.com/le0zh0u">@leozhou</a> 开发，<a href="mailto:hi@leozhou.me">问题反馈</a>
         </el-form-item>
       </el-form>
     </el-col>
@@ -120,134 +97,128 @@
 import Vue from 'vue';
 // @ts-ignore
 import domtoimage from 'retina-dom-to-image';
-import trackZhRaw from './data/track-zh';
-import trackEnRaw from './data/track-en';
-import trackKeyRaw from './data/track-keynote';
+import podcastDataRaw from './data/podcast-data'
 
-type SpeechInfo = {
-  track: string,
-  title: string,
+type PodcastInfo = {
+  id: number,
   name: string,
-  topic: string,
-  time: string,
-  isKeynote: boolean
+  logoName: string
 };
 
-const trackKey = trackKeyRaw.split('\n').slice(2).filter(line => !!line);
+type PodcastLogoDefaultPos = {
+  width: number,
+  height: number,
+  top: number,
+  left: number
+};
 
-function getTrackInfo(raw: string, isZh: boolean): SpeechInfo[] {
-  let infos = raw.split('\n').slice(2)
-    .filter(line => !!line)
-    .map(line => {
-      const arr = line.split(',');
-      return {
-        track: arr[2],
-        title: arr[4],
-        name: arr[1],
-        topic: arr[3],
-        time: arr[5],
-        isKeynote: false
-      };
-    });
+type PodcastLogoInfo = {
+  id: number,
+  name: string,
+  logoPos: string,
+  width: number,
+  height: number,
+  top: number,
+  left: number,
+  defaultPos: PodcastLogoDefaultPos
+};
 
-  // add keynote
-  infos = infos.concat(
-    trackKey.filter(line => {
-      return isZh === /[\u4e00-\u9fa5]/.test(line);
-    })
-      .map(line => {
-        const arr = line.split(',');
-        return {
-          track: arr[0],
-          title: arr[2],
-          name: arr[1],
-          topic: arr[3],
-          time: arr[4],
-          isKeynote: true
-        };
-      })
-  );
-
-  return infos;
+function getPodcastData(raw:String): PodcastInfo[] {
+  return raw.split('\n').slice(2)
+  .filter(line => !!line)
+  .map((line) => {
+    const arr = line.split(',')
+    return {
+      id: Number(arr[0]),
+      name: arr[1],
+      logoName: arr[2],
+    }
+  })
 }
 
-const trackZh = getTrackInfo(trackZhRaw, true);
-const trackEn = getTrackInfo(trackEnRaw, false);
+const podcastInfoList = getPodcastData(podcastDataRaw)
 
 export default Vue.extend({
   data() {
     return {
-      track: '',
-      imageUrl: null as unknown as string,
-      title: '',
-      name: '',
       topic: '',
       time: '',
       isKeynote: false,
-      avatarInput: null,
-
-      nameFontSize: 1,
       topicFontSize: 1,
 
-      avatarDefaultPos: {
-        width: 0,
-        height: 0,
-        top: 0,
-        left: 0
-      },
-      avatarPos: {
-        width: 0,
-        height: 0,
-        top: 0,
-        left: 0
-      },
-      avatarZoom: 1,
-      isMouseDown: false,
-      mouseX: 0,
-      mouseY: 0,
       isDownloading: false,
       posterBase64: '',
 
-      lang: 'zh'
+      // new attribute
+      podcastNum: "2",
+      podcastList: [],
+      podcastLogoImageList: [] as PodcastLogoInfo[],
+      activePodcastLogos: []
     };
   },
+
+  watch: {
+      podcastList(newList, oldList) {
+        if(newList == oldList) return ;
+        const list:PodcastLogoInfo[] = newList.sort().map((item:number, index:number) => {
+          const podcast = podcastInfoList.filter(podcastInfo => {
+            return podcastInfo.id === item
+          })
+          return this.genLogoPos(podcast[0], index)
+        })
+
+        this.podcastLogoImageList = list
+      }
+    },
 
   mounted() {
   },
 
+  computed: {
+    podcastSelectorList(){
+      return podcastInfoList
+    },
+    podcastNums(){
+      
+      return Number(this.podcastNum)
+    }
+  },
+
   methods: {
-    trackQuery(str: string, cb: Function) {
-      const trackInfos = this.lang === 'zh' ? trackZh : trackEn;
-      const result = str
-        ? trackInfos.filter(info => info.track === str)
-        : trackInfos;
-      const distinct = result.map(info => info.track)
-        .filter((track, index, self) => self.indexOf(track) === index);
-      cb(distinct.map(track => {
-        return {value: track}
-      }));
-    },
 
-    nameQuery(str: string, cb: Function) {
-      const trackInfos = this.lang === 'zh' ? trackZh : trackEn;
-      const result = str
-        ? trackInfos.filter(info => info.name === str)
-        : trackInfos.filter(info => info.track === this.track);
-      cb(result.map(track => {
-        return {
-          value: track.name,
-          track
+    genLogoPos(podcastInfo: PodcastInfo, index:number){
+      const logDefaultPos: PodcastLogoDefaultPos = {
+        width: 16,//417 * 100 / 2208,
+        height: 16,//417 * 100 / 2208,
+        top: 180 / 718 * 100,//373 / 2208 * 100,
+        left: 486/864/2 * 100,//100 / 2208 * 1242,
+      }
+
+      if(this.podcastNums === 1){
+        // none
+      } else if(this.podcastNums === 2){
+        logDefaultPos.left = 70 / 508 * 100 + (16 + 11) * index
+      } else if(this.podcastNums === 3) {
+        if(index == 0){
+          logDefaultPos.left = 8
+        } else if(index == 1){
+          // logDefaultPos.left =42
+        } else {
+          logDefaultPos.left = 486 / 864 * 100 - 8
         }
-      }));
-    },
+      }
 
-    nameSelect(item: {track: SpeechInfo, value: string}) {
-      this.topic = item.track.topic;
-      this.time = item.track.time;
-      this.title = item.track.title;
-      this.isKeynote = item.track.isKeynote;
-      this.nameFontReset();
-      this.topicFontReset();
+      return {
+          id: podcastInfo.id,
+          name: podcastInfo.name,
+          logoPos: 'logos/'+podcastInfo.logoName,
+          width: logDefaultPos.width,//417 * 100 / 2208,
+          height: logDefaultPos.height,//417 * 100 / 2208,
+          top: logDefaultPos.top,//373 / 2208 * 100,
+          left: logDefaultPos.left,//100 / 2208 * 1242,
+          logoZoom: 1,
+          defaultPos: logDefaultPos
+        }
     },
 
     download() {
@@ -258,67 +229,27 @@ export default Vue.extend({
           this.isDownloading = false;
           const link = document.createElement('a');
           link.href = url;
-          link.download = this.name + '.jpeg';
+          link.download = this.topic + '.jpeg';
           link.click();
         })
     },
 
-    mouseDown(event: MouseEvent) {
-      if (!this.imageUrl) {
-        return;
+    zoomReset(id:number) {
+      console.log(this.podcastLogoImageList)
+      const filterResult = this.podcastLogoImageList.filter(item => {
+        return item.id === id
+      })
+      if(filterResult.length == 0){
+        return 
       }
-      this.isMouseDown = true;
-      this.mouseX = event.pageX;
-      this.mouseY = event.pageY;
+      
+      const logo = filterResult[0]
+      logo.width = logo.defaultPos.width;
+      logo.height = logo.defaultPos.height;
+      logo.left = logo.defaultPos.left;
+      logo.top = logo.defaultPos.top;
     },
 
-    mouseMove(event: MouseEvent) {
-      if (!this.isMouseDown) {
-        return;
-      }
-      const ratio = 100 / window.innerHeight;
-
-      this.avatarPos.left += (event.pageX - this.mouseX) * ratio;
-      this.avatarPos.top += (event.pageY - this.mouseY) * ratio;
-      this.mouseX = event.pageX;
-      this.mouseY = event.pageY;
-    },
-
-    mouseUp(event: MouseEvent) {
-      this.isMouseDown = false;
-    },
-
-    zoomIn() {
-      this.avatarZoom += 0.05;
-      this.avatarPos.width = this.avatarDefaultPos.width * this.avatarZoom;
-      this.avatarPos.height = this.avatarDefaultPos.height * this.avatarZoom;
-    },
-
-    zoomOut() {
-      this.avatarZoom -= 0.05;
-      this.avatarPos.width = this.avatarDefaultPos.width * this.avatarZoom;
-      this.avatarPos.height = this.avatarDefaultPos.height * this.avatarZoom;
-    },
-
-    zoomReset() {
-      this.avatarZoom = 1;
-      this.avatarPos.width = this.avatarDefaultPos.width;
-      this.avatarPos.height = this.avatarDefaultPos.height;
-      this.avatarPos.left = this.avatarDefaultPos.left;
-      this.avatarPos.top = this.avatarDefaultPos.top;
-    },
-
-    nameFontAdd() {
-      this.nameFontSize += 0.1;
-    },
-
-    nameFontMinus() {
-      this.nameFontSize -= 0.1;
-    },
-
-    nameFontReset() {
-      this.nameFontSize = 1;
-    },
 
     topicFontAdd() {
       this.topicFontSize += 0.1;
@@ -337,28 +268,6 @@ export default Vue.extend({
         (this.$refs.avatarInput as HTMLElement).click();
       }
     },
-
-    // @ts-ignore
-    avatarChange(event) {
-      const file = event.target.files && event.target.files.length ? event.target.files[0] : null;
-      if (file) {
-        this.imageUrl = window.URL.createObjectURL(file);
-
-        const img = new Image();
-        img.onload = () => {
-          const h = 417 * 100 / 2208;
-          const w = h / img.height * img.width;
-          const top = 373 / 2208 * 100;
-          const pw = 100 / 2208 * 1242;
-          const left = (pw - w) / 2;
-          this.avatarDefaultPos.width = this.avatarPos.width = w;
-          this.avatarDefaultPos.height = this.avatarPos.height = h;
-          this.avatarDefaultPos.left = this.avatarPos.left = left;
-          this.avatarDefaultPos.top = this.avatarPos.top = top;
-        };
-        img.src = this.imageUrl;
-      }
-    }
   }
 })
 </script>
@@ -427,28 +336,14 @@ h1 {
       right: 0;
       top: 0;
       bottom: 0;
-      padding: 37vh 3vh 0 3vh;
+      padding: 46vh 3vh 0 3vh;
       text-align: center;
       color: #fff;
       font-size: 2vh;
     }
-
-      .author-img {
+      .podcast-logo-img{
         position: absolute;
-        z-index: -10;
-      }
-
-      .title {
-        font-weight: normal;
-        color: #FFE342;
-      }
-
-      .name {
-        margin: 0 0 0.5vh 0;
-        color: #FFE342;
-        font-family: 'SourceHanSerifSC', 'Open Sans';
-        font-size: 3.7vh;
-        font-weight: bold;
+        z-index: 10;
       }
 
       .topic {
@@ -472,7 +367,7 @@ h1 {
   margin-bottom: 5px;
 }
 
-#track {
+#podcast {
   margin-top: 10px;
 }
 
@@ -517,5 +412,9 @@ h1 {
 
 .info, .info a {
   color: #aaa;
+}
+
+.logo-attribute{
+  margin-bottom: 10px;
 }
 </style>
