@@ -15,7 +15,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'acasia-poster',
+    title: 'tech-podcast-poster',
     htmlAttrs: {
       lang: 'en'
     },

@@ -6,9 +6,12 @@
       >
         <div class="bg"></div>
         <img class="poster-template" :src="'poster-template.png'">
-        <img v-for="podcastLogoImage in podcastLogoImageList" class="podcast-logo-img" v-if="podcastLogoImageList.length > 0" :src="podcastLogoImage.logoPos" ref="avatar"
-          :style="{'width': podcastLogoImage.width + 'vh', 'height': podcastLogoImage.height + 'vh', 'left': podcastLogoImage.left + 'vh', 'top': podcastLogoImage.top + 'vh'}"
-        >
+        <div v-for="podcastLogoImage in podcastLogoImageList" v-if="podcastLogoImageList.length > 0" class="podcast-logo-img" :style="{'left': podcastLogoImage.left + 'vh', 'top': podcastLogoImage.top + 'vh'}">
+          <img  :src="podcastLogoImage.logoPos" ref="avatar"
+            :style="{'width': podcastLogoImage.width + 'vh', 'height': podcastLogoImage.height + 'vh', 'left': podcastLogoImage.left + 'vh', 'top': podcastLogoImage.top + 'vh'}"
+          >
+          <p :style="{'text-align': 'center','width': podcastLogoImage.width + 'vh','color':'white', 'margin-top':'0.1em', 'font-size':'1.7vh'}">{{podcastLogoImage.name}}</p>
+        </div>
         <div class="poster-content">
           <div class="topic" :style="{'font-size': 3.5 * topicFontSize + 'vh'}">{{ topic }}</div>
           <div class="time">{{ time }}</div>
@@ -62,6 +65,13 @@
           <el-input v-model="topic" />
         </el-form-item>
         <el-form-item label="直播时间">
+          <el-date-picker
+            v-model="pickerTime"
+            type="datetimerange"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :default-time="['20:00:00', '22:00:00']">
+          </el-date-picker>
           <el-input v-model="time" />
         </el-form-item>
         <el-form-item label="字号调整（串台主题）">
@@ -95,6 +105,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import moment from 'moment';
+
 // @ts-ignore
 import domtoimage from 'retina-dom-to-image';
 import podcastDataRaw from './data/podcast-data'
@@ -143,6 +155,7 @@ export default Vue.extend({
     return {
       topic: '',
       time: '',
+      pickerTime:[],
       isKeynote: false,
       topicFontSize: 1,
 
@@ -158,19 +171,31 @@ export default Vue.extend({
   },
 
   watch: {
-      podcastList(newList, oldList) {
-        if(newList == oldList) return ;
-        const list:PodcastLogoInfo[] = newList.sort().map((item:number, index:number) => {
-          const podcast = podcastInfoList.filter(podcastInfo => {
-            return podcastInfo.id === item
-          })
-          return this.genLogoPos(podcast[0], index)
+    podcastList(newList, oldList) {
+      if(newList == oldList) return ;
+      console.log(newList)
+      const list:PodcastLogoInfo[] = newList.sort((a:number, b:number) => {
+        return a - b
+      }).map((item:number, index:number) => {
+        const podcast = podcastInfoList.filter(podcastInfo => {
+          return podcastInfo.id === item
         })
+        return this.genLogoPos(podcast[0], index)
+      })
 
-        this.podcastLogoImageList = list
-      }
+      this.podcastLogoImageList = list
     },
 
+    pickerTime(newTimeArr, oldTimeArr){
+      if(newTimeArr == oldTimeArr) return 
+
+      const startTime = moment(newTimeArr[0]).format('YYYY/MM/DD HH:mm')
+      const endTime = moment(newTimeArr[1]).format('HH:mm')
+
+      this.time = startTime + " - " + endTime
+      
+    }
+  },
   mounted() {
   },
 
@@ -190,7 +215,7 @@ export default Vue.extend({
       const logDefaultPos: PodcastLogoDefaultPos = {
         width: 16,//417 * 100 / 2208,
         height: 16,//417 * 100 / 2208,
-        top: 180 / 718 * 100,//373 / 2208 * 100,
+        top: 170 / 718 * 100,//373 / 2208 * 100,
         left: 486/864/2 * 100,//100 / 2208 * 1242,
       }
 
@@ -350,11 +375,16 @@ h1 {
         margin-bottom: 0.5vh;
         font-size: 2.3vh;
         font-weight: bold;
+        white-space: pre-line;
+        word-break: break-all;
+        word-wrap: break-word;
+
       }
 
       .time {
         font-size: 2vh;
-        color: #ccc;
+        color: #fff;
+        /* color: #ccc; */
       }
 
       .keynote {
@@ -364,6 +394,10 @@ h1 {
       }
 
 .el-form-item {
+  margin-bottom: 5px;
+}
+
+.el-form-item__label{
   margin-bottom: 5px;
 }
 
