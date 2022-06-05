@@ -111,12 +111,15 @@ import moment from 'moment';
 import domtoimage from 'retina-dom-to-image';
 import podcastDataRaw from './data/podcast-data'
 
+
+// 播客信息 - 用于数据导出时适配试用
 type PodcastInfo = {
   id: number,
   name: string,
   logoName: string
 };
 
+// 播客logo默认配置，用于调整后恢复使用
 type PodcastLogoDefaultPos = {
   width: number,
   height: number,
@@ -124,6 +127,7 @@ type PodcastLogoDefaultPos = {
   left: number
 };
 
+// 播客logo信息，用于展示
 type PodcastLogoInfo = {
   id: number,
   name: string,
@@ -135,6 +139,7 @@ type PodcastLogoInfo = {
   defaultPos: PodcastLogoDefaultPos
 };
 
+// 从数据源中导入播客数据
 function getPodcastData(raw:String): PodcastInfo[] {
   return raw.split('\n').slice(2)
   .filter(line => !!line)
@@ -148,29 +153,38 @@ function getPodcastData(raw:String): PodcastInfo[] {
   })
 }
 
+// 构建播客数据
 const podcastInfoList = getPodcastData(podcastDataRaw)
 
 export default Vue.extend({
   data() {
     return {
-      topic: '',
+      // 串台主题
+      topic: '', 
+      // 直播时间
       time: '',
       pickerTime:[],
-      isKeynote: false,
+      // 主题文字缩放
       topicFontSize: 1,
 
+      // 是否导出中
       isDownloading: false,
       posterBase64: '',
 
       // new attribute
+      // 播客数量
       podcastNum: "2",
+      // 选中的播客
       podcastList: [],
+      // 选中的播客图片信息
       podcastLogoImageList: [] as PodcastLogoInfo[],
+      // 展开的播客logo编辑
       activePodcastLogos: []
     };
   },
 
   watch: {
+    // 如果选中的播客发生变化，需要重新构建播客logo的配置
     podcastList(newList, oldList) {
       if(newList == oldList) return ;
       console.log(newList)
@@ -185,13 +199,19 @@ export default Vue.extend({
 
       this.podcastLogoImageList = list
     },
-
+    // 如果时间选择发生变化，格式化时间
     pickerTime(newTimeArr, oldTimeArr){
       if(newTimeArr == oldTimeArr) return 
 
       const startTime = moment(newTimeArr[0]).format('YYYY/MM/DD HH:mm')
-      const endTime = moment(newTimeArr[1]).format('HH:mm')
-
+      var endTime = ''
+      if(moment(newTimeArr[0]).dayOfYear === moment(newTimeArr[1]).dayOfYear){
+        // 同一天
+         endTime = moment(newTimeArr[1]).format('HH:mm')
+      } else {
+        endTime = moment(newTimeArr[1]).format('MM/DD HH:mm')
+      }
+      
       this.time = startTime + " - " + endTime
       
     }
@@ -200,9 +220,11 @@ export default Vue.extend({
   },
 
   computed: {
+    // 用于下拉框
     podcastSelectorList(){
       return podcastInfoList
     },
+    // 用于多选的数量限制
     podcastNums(){
       let s:string = this.podcastNum
       return Number(s)
@@ -211,6 +233,7 @@ export default Vue.extend({
 
   methods: {
 
+    //生成logo的位置
     genLogoPos(podcastInfo: PodcastInfo, index:number){
       const logDefaultPos: PodcastLogoDefaultPos = {
         width: 16,//417 * 100 / 2208,
@@ -246,6 +269,7 @@ export default Vue.extend({
         }
     },
 
+    // 生成图片并下载
     download() {
       this.isDownloading = true;
       domtoimage.toJpeg(document.getElementById('poster-preview'))
@@ -259,6 +283,7 @@ export default Vue.extend({
         })
     },
 
+    // 重置图片大小
     zoomReset(id:number) {
       console.log(this.podcastLogoImageList)
       const filterResult = this.podcastLogoImageList.filter(item => {
@@ -275,23 +300,18 @@ export default Vue.extend({
       logo.top = logo.defaultPos.top;
     },
 
-
+    // 放大主题文字
     topicFontAdd() {
       this.topicFontSize += 0.1;
     },
 
+    // 缩小主题文字
     topicFontMinus() {
       this.topicFontSize -= 0.1;
     },
-
+    // 重置主题文字大小
     topicFontReset() {
       this.topicFontSize = 1;
-    },
-
-    setAvatar() {
-      if (this.$refs.avatarInput) {
-        (this.$refs.avatarInput as HTMLElement).click();
-      }
     },
   }
 })
@@ -387,12 +407,6 @@ h1 {
         /* color: #ccc; */
       }
 
-      .keynote {
-        display: block;
-        margin: 0.5vh auto;
-        height: 5vh;
-      }
-
 .el-form-item {
   margin-bottom: 5px;
 }
@@ -403,22 +417,6 @@ h1 {
 
 #podcast {
   margin-top: 10px;
-}
-
-.avatar-uploader {
-  display: inline-block;
-  margin-top: 10px;
-  width: 40px;
-  height: 40px;
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.avatar-uploader:hover {
-  border-color: #409EFF;
 }
 
 .avatar-icon {

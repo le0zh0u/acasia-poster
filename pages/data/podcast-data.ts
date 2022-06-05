@@ -15,6 +15,6 @@ id,name,logoName
 13,开源面对面,opensource-f2f.jpeg
 14,科技零食,kejilingshi.png
 15,科技乱炖,kejiluandun.png
-16,陪你读开源,peinikankaiyuan.jpeg
+16,陪你看开源,peinikankaiyuan.jpeg
 17,质量三人行,zhiliangsanrenxing.jpeg
 `
