@@ -28,7 +28,7 @@
           <el-radio-button label="3"></el-radio-button>
         </el-radio-group>
       </el-row>
-      <el-form>
+      <el-form label-position="top">
         <el-form-item label="播客" id="podcast">
           <el-select v-model="podcastList" multiple placeholder="请选择" :multiple-limit="podcastNums">
             <el-option
@@ -38,7 +38,9 @@
               :value="item.id">
             </el-option>
           </el-select>
-          <el-collapse v-model="activePodcastLogos" v-if="podcastLogoImageList.length > 0">
+        </el-form-item>
+        <el-form-item  label="播客Logo调整">
+          <el-collapse v-model="activePodcastLogos" v-if="podcastLogoImageList.length > 0" class="podcast-logo-edit-panel">
             <el-collapse-item v-for="podcastLogoImage in podcastLogoImageList" :key="podcastLogoImage.id" :title="podcastLogoImage.name" :name="podcastLogoImage.id">
               <el-input placeholder="请输入宽度" v-model="podcastLogoImage.width" class="logo-attribute">
                 <template slot="prepend">Width:</template>
@@ -56,35 +58,19 @@
                 <template slot="prepend">Left:</template>
                 <template slot="append">vh</template>
               </el-input>
+              <el-input placeholder="请输入内容" v-model="podcastLogoImage.logoPos" class="logo-attribute">
+                <template slot="prepend">Image:</template>
+                <template slot="append">可填入URL地址</template>
+              </el-input>
               <el-button icon="el-icon-refresh-left" @click="zoomReset(podcastLogoImage.id)" circle></el-button>
             </el-collapse-item>
           </el-collapse>
         </el-form-item>
       </el-form>
+      <el-divider></el-divider>
       <el-form>
         <el-form-item label="串台主题">
           <el-input v-model="topic" />
-        </el-form-item>
-        <el-form-item label="主题描述">
-          <el-button icon="el-icon-plus" @click="addTopicDesc()" circle></el-button>
-        </el-form-item>
-        <el-form-item v-for="(topicDesc, index) in topicDescList" :key="index" :label="'第'+(index+1)+'行'">
-        <div class="topic-desc-item">
-            <el-input v-model="topicDesc.value" />
-            <el-button icon="el-icon-minus" @click="minusTopicDesc(index)" type="danger" circle></el-button>
-            </div>
-        </el-form-item>
-        <el-form-item label="直播时间">
-          <el-date-picker
-            v-model="pickerTime"
-            type="datetimerange"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            :default-time="['20:00:00', '22:00:00']">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="直播时间展示">
-          <el-input v-model="time" />
         </el-form-item>
         <el-form-item label="字号调整（串台主题）">
           <div :span="12">
@@ -99,6 +85,15 @@
             </a>
           </div>
         </el-form-item>
+        <el-form-item label="主题描述">
+          <el-button icon="el-icon-plus" @click="addTopicDesc()" circle></el-button>
+        </el-form-item>
+        <el-form-item v-for="(topicDesc, index) in topicDescList" :key="index" :label="'第'+(index+1)+'行'">
+        <div class="topic-desc-item">
+            <el-input v-model="topicDesc.value" />
+            <el-button icon="el-icon-minus" @click="minusTopicDesc(index)" type="danger" circle></el-button>
+            </div>
+        </el-form-item>
         <el-form-item label="字号调整（主题描述）">
           <div :span="12">
             <a href="javascript:;" @click="topicDescFontAdd()">
@@ -112,7 +107,20 @@
             </a>
           </div>
         </el-form-item>
-
+        <el-divider></el-divider>
+        <el-form-item label="直播时间">
+          <el-date-picker
+            v-model="pickerTime"
+            type="datetimerange"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :default-time="['20:00:00', '22:00:00']">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="直播时间展示">
+          <el-input v-model="time" />
+        </el-form-item>
+        <el-divider></el-divider>
         <el-form-item>
           <el-button type="primary" @click="download()"
           >
@@ -508,5 +516,9 @@ h1 {
 
 .el-button.is-circle {
   padding: 6px;
+}
+
+.podcast-logo-edit-panel{
+  margin-top:10px
 }
 </style>
