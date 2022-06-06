@@ -22,15 +22,10 @@
     <el-col :span="8" class="poster-control" v-loading="isDownloading" element-loading-text="生成海报中">
       <el-row>
         <h1>技术播客月海报生成器</h1>
-        <p>串台播客数量</p><el-radio-group size="small" v-model="podcastNum">
-          <el-radio-button label="1"></el-radio-button>
-          <el-radio-button label="2"></el-radio-button>
-          <el-radio-button label="3"></el-radio-button>
-        </el-radio-group>
       </el-row>
       <el-form label-position="top">
         <el-form-item label="播客" id="podcast">
-          <el-select v-model="podcastList" multiple placeholder="请选择" :multiple-limit="podcastNums">
+          <el-select v-model="podcastList" multiple placeholder="请选择" :multiple-limit="3" class="podcast-select">
             <el-option
               v-for="item in podcastSelectorList"
               :key="item.id"
@@ -208,8 +203,6 @@ export default Vue.extend({
       posterBase64: '',
 
       // new attribute
-      // 播客数量
-      podcastNum: "2",
       // 选中的播客
       podcastList: [],
       // 选中的播客图片信息
@@ -223,13 +216,15 @@ export default Vue.extend({
     // 如果选中的播客发生变化，需要重新构建播客logo的配置
     podcastList(newList, oldList) {
       if(newList == oldList) return ;
+      const length = newList.length
+      if(length == 0) return;
       const list:PodcastLogoInfo[] = newList.sort((a:number, b:number) => {
         return a - b
       }).map((item:number, index:number) => {
         const podcast = podcastInfoList.filter(podcastInfo => {
           return podcastInfo.id === item
         })
-        return this.genLogoPos(podcast[0], index)
+        return this.genLogoPos(podcast[0], index, length)
       })
 
       this.podcastLogoImageList = list
@@ -259,17 +254,12 @@ export default Vue.extend({
     podcastSelectorList(){
       return podcastInfoList
     },
-    // 用于多选的数量限制
-    podcastNums(){
-      let s:string = this.podcastNum
-      return Number(s)
-    }
   },
 
   methods: {
 
     //生成logo的位置
-    genLogoPos(podcastInfo: PodcastInfo, index:number){
+    genLogoPos(podcastInfo: PodcastInfo, index:number, podcastNum: number){
       const logDefaultPos: PodcastLogoDefaultPos = {
         width: 16,//417 * 100 / 2208,
         height: 16,//417 * 100 / 2208,
@@ -277,11 +267,11 @@ export default Vue.extend({
         left: 486/864/2 * 100,//100 / 2208 * 1242,
       }
 
-      if(this.podcastNums === 1){
+      if(podcastNum === 1){
         // none
-      } else if(this.podcastNums === 2){
+      } else if(podcastNum === 2){
         logDefaultPos.left = 70 / 508 * 100 + (16 + 11) * index
-      } else if(this.podcastNums === 3) {
+      } else if(podcastNum === 3) {
         if(index == 0){
           logDefaultPos.left = 8
         } else if(index == 1){
@@ -520,5 +510,9 @@ h1 {
 
 .podcast-logo-edit-panel{
   margin-top:10px
+}
+
+.podcast-select {
+  width: 100%
 }
 </style>
