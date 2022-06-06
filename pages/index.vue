@@ -34,8 +34,8 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item  label="播客Logo调整">
-          <el-collapse v-model="activePodcastLogos" v-if="podcastLogoImageList.length > 0" class="podcast-logo-edit-panel">
+        <el-form-item  label="播客Logo调整" v-if="podcastLogoImageList.length > 0">
+          <el-collapse v-model="activePodcastLogos"  class="podcast-logo-edit-panel">
             <el-collapse-item v-for="podcastLogoImage in podcastLogoImageList" :key="podcastLogoImage.id" :title="podcastLogoImage.name" :name="podcastLogoImage.id">
               <el-input placeholder="请输入宽度" v-model="podcastLogoImage.width" class="logo-attribute">
                 <template slot="prepend">Width:</template>
@@ -217,7 +217,6 @@ export default Vue.extend({
     podcastList(newList, oldList) {
       if(newList == oldList) return ;
       const length = newList.length
-      if(length == 0) return;
       const list:PodcastLogoInfo[] = newList.sort((a:number, b:number) => {
         return a - b
       }).map((item:number, index:number) => {
