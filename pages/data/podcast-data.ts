@@ -4,8 +4,8 @@ id,name,logoName
 2,CHAOSScast China,chaosschina.png
 3,Echo.js,echojs.jpeg
 4,Emacs Talk,emacstalk.png
-5,Go 夜聊星球,talkgofm.png
-6,Nelula Graph,nebula-graph.png
+5,Go 夜聊,talkgofm.png
+6,Nelula Graph 星球,nebula-graph.png
 7,OnBoard!,onboard.jpeg
 8,Web Worker,webworker.jpg
 9,编码人声,bianmarensheng-logo.png
