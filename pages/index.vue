@@ -55,7 +55,7 @@
               </el-input>
               <el-input placeholder="请输入内容" v-model="podcastLogoImage.logoPos" class="logo-attribute">
                 <template slot="prepend">Image:</template>
-                <template slot="append">可填入URL地址</template>
+                <template slot="append">可填入URL地址-HTTPS</template>
               </el-input>
               <el-button icon="el-icon-refresh-left" @click="zoomReset(podcastLogoImage.id)" circle></el-button>
             </el-collapse-item>
