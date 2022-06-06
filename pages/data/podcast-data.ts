@@ -11,7 +11,7 @@ id,name,logoName
 9,编码人声,bianmarensheng-logo.png
 10,大话开源,opentekr.jpeg
 11,枫言枫语,fengyanfengyu.png
-12,后互联网时代的乱弹,the-human-future.jpg
+12,后互联网时代的乱弹,the-human-future.svg
 13,开源面对面,opensource-f2f.jpeg
 14,科技零食,kejilingshi.png
 15,科技乱炖,kejiluandun.png
