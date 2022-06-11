@@ -5,7 +5,7 @@
         :style="{'cursor': 'default'}"
       >
         <div class="bg"></div>
-        <img class="poster-template" :src="'poster-template.png'">
+        <img class="poster-template" :src="bgUrl">
         <div v-for="podcastLogoImage in podcastLogoImageList" v-if="podcastLogoImageList.length > 0" class="podcast-logo-img" :style="{'left': podcastLogoImage.left + 'vh', 'top': podcastLogoImage.top + 'vh'}">
           <img  :src="podcastLogoImage.logoPos" ref="avatar"
             :style="{'width': podcastLogoImage.width + 'vh', 'height': podcastLogoImage.height + 'vh', 'left': podcastLogoImage.left + 'vh', 'top': podcastLogoImage.top + 'vh'}"
@@ -24,6 +24,10 @@
         <h1>技术播客月海报生成器</h1>
       </el-row>
       <el-form label-position="top">
+        <el-form-item label="海报背景地址" id="bgUrl">
+          <el-input placeholder="请输入背景地址" v-model="bgUrl"></el-input>
+        </el-form-item>
+        <el-divider></el-divider>
         <el-form-item label="播客" id="podcast">
           <el-select v-model="podcastList" multiple placeholder="请选择" :multiple-limit="3" class="podcast-select">
             <el-option
@@ -116,6 +120,10 @@
           <el-input v-model="time" />
         </el-form-item>
         <el-divider></el-divider>
+        <el-form-item label="直播预约">
+          
+        </el-form-item>
+        <el-divider></el-divider>
         <el-form-item>
           <el-button type="primary" @click="download()"
           >
@@ -167,6 +175,12 @@ type PodcastLogoInfo = {
   defaultPos: PodcastLogoDefaultPos
 };
 
+// 直播间信息
+type LiveRoomInfo = {
+  account: string,
+  image: ImageData
+}
+
 // 从数据源中导入播客数据
 function getPodcastData(raw:String): PodcastInfo[] {
   return raw.split('\n').slice(2)
@@ -187,6 +201,8 @@ const podcastInfoList = getPodcastData(podcastDataRaw)
 export default Vue.extend({
   data() {
     return {
+      // bgURL
+      bgUrl: 'poster-template.png', //'http://img.leozhou.me/picGo/技术播客月直播预告.png',
       // 串台主题
       topic: '', 
       // 主题描述
@@ -208,7 +224,7 @@ export default Vue.extend({
       // 选中的播客图片信息
       podcastLogoImageList: [] as PodcastLogoInfo[],
       // 展开的播客logo编辑
-      activePodcastLogos: []
+      activePodcastLogos: [],
     };
   },
 
