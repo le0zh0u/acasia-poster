@@ -25,7 +25,9 @@
       </el-row>
       <el-form label-position="top">
         <el-form-item label="海报背景地址" id="bgUrl">
-          <el-input placeholder="请输入背景地址" v-model="bgUrl"></el-input>
+          <el-input placeholder="请输入背景地址" v-model="bgUrl">
+            <template slot="append">可填入URL地址-HTTPS</template>
+          </el-input>
         </el-form-item>
         <el-divider></el-divider>
         <el-form-item label="播客" id="podcast">
