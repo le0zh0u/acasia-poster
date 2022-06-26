@@ -204,7 +204,7 @@ export default Vue.extend({
   data() {
     return {
       // bgURL
-      bgUrl: 'poster-template.png', //'http://img.leozhou.me/picGo/技术播客月直播预告.png',
+      bgUrl: 'poster-template.jpg', //'http://img.leozhou.me/picGo/技术播客月直播预告.png',
       // 串台主题
       topic: '', 
       // 主题描述
