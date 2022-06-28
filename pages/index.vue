@@ -1,21 +1,36 @@
 <template>
   <el-row type="flex" class="poster-container" justify="center">
     <el-col :span="12">
-      <div id="poster-preview"
-        :style="{'cursor': 'default'}"
-      >
+      <div id="poster-preview" :style="{ 'cursor': 'default' }">
         <div class="bg"></div>
         <img class="poster-template" :src="bgUrl">
-        <div v-for="podcastLogoImage in podcastLogoImageList" v-if="podcastLogoImageList.length > 0" class="podcast-logo-img" :style="{'left': podcastLogoImage.left + 'vh', 'top': podcastLogoImage.top + 'vh'}">
-          <img  :src="podcastLogoImage.logoPos" ref="avatar"
-            :style="{'width': podcastLogoImage.width + 'vh', 'height': podcastLogoImage.height + 'vh', 'left': podcastLogoImage.left + 'vh', 'top': podcastLogoImage.top + 'vh'}"
-          >
-          <p :style="{'text-align': 'center','width': podcastLogoImage.width + 'vh','color':'white', 'margin-top':'0.1em', 'font-size':'1.7vh'}">{{podcastLogoImage.name}}</p>
+        <div v-for="podcastLogoImage in podcastLogoImageList" v-if="podcastLogoImageList.length > 0"
+          class="podcast-logo-img"
+          :style="{ 'left': podcastLogoImage.left + 'vh', 'top': podcastLogoImage.top + 'vh' }">
+          <img :src="podcastLogoImage.logoPos" ref="avatar"
+            :style="{ 'width': podcastLogoImage.width + 'vh', 'height': podcastLogoImage.height + 'vh', 'left': podcastLogoImage.left + 'vh', 'top': podcastLogoImage.top + 'vh' }">
+          <p
+            :style="{ 'text-align': 'center', 'width': podcastLogoImage.width + 'vh', 'color': 'white', 'margin-top': '0.1em', 'font-size': '1.7vh' }">
+            {{ podcastLogoImage.name }}</p>
         </div>
         <div class="poster-content">
-          <div class="topic" :style="{'font-size': 3.5 * topicFontSize + 'vh'}">{{ topic }}</div>
-          <div v-if="topicDescList.length > 0 && topicDescList[0].value != ''" v-for="(topicDesc, index) in topicDescList" :key="index" class="sub-topic" :style="{'font-size': 2.5 * topicDescFontSize + 'vh'}">{{ topicDesc.value }}</div>
+          <div class="topic" :style="{ 'font-size': 3.5 * topicFontSize + 'vh' ,'padding-left':'3vh','padding-right':'3vh' }">{{ topic }}</div>
+          <div v-if="topicDescList.length > 0 && topicDescList[0].value != ''"
+            v-for="(topicDesc, index) in topicDescList" :key="index" class="sub-topic"
+            :style="{ 'font-size': 2.5 * topicDescFontSize + 'vh' }">{{ topicDesc.value }}</div>
           <div class="time">{{ time }}</div>
+<!-- :style="{ 'padding-left': 0 + 'vh', 'padding-right': 0 + 'vh', 'background-color': 'rgba(255, 255, 255, 0.6)', 'height': liveRoomQRPannelHeight + 'vh' }" -->
+          <div class="entire-live-room-content"
+            >
+            <div v-for="liveRoom in entireLiveRoomQRList" v-if="entireLiveRoomQRList.length > 0"
+              class="podcast-logo-img" :style="{ 'left': liveRoom.left + 'vh' , 'bottom': liveRoom.bottom + 'vh', 'background-color': 'rgba(255, 255, 255, 0.7)' }">
+              <img :src="liveRoom.qrPos" ref="avatar"
+                :style="{ 'width': liveRoom.width + 'vh', 'height': liveRoom.height + 'vh', 'left': liveRoom.left + 'vh', 'bottom': liveRoom.bottom + 'vh' }">
+              <p
+                :style="{ 'text-align': 'center', 'width': liveRoom.width + 'vh', 'color': 'black', 'margin-top': '0', 'font-size': '0.8vh','word-wrap':'break-word' }">
+                {{ liveRoom.name }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </el-col>
@@ -32,17 +47,14 @@
         <el-divider></el-divider>
         <el-form-item label="播客" id="podcast">
           <el-select v-model="podcastList" multiple placeholder="请选择" :multiple-limit="3" class="podcast-select">
-            <el-option
-              v-for="item in podcastSelectorList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
+            <el-option v-for="item in podcastSelectorList" :key="item.id" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item  label="播客Logo调整" v-if="podcastLogoImageList.length > 0">
-          <el-collapse v-model="activePodcastLogos"  class="podcast-logo-edit-panel">
-            <el-collapse-item v-for="podcastLogoImage in podcastLogoImageList" :key="podcastLogoImage.id" :title="podcastLogoImage.name" :name="podcastLogoImage.id">
+        <el-form-item label="播客Logo调整" v-if="podcastLogoImageList.length > 0">
+          <el-collapse v-model="activePodcastLogos" class="podcast-logo-edit-panel">
+            <el-collapse-item v-for="podcastLogoImage in podcastLogoImageList" :key="podcastLogoImage.id"
+              :title="podcastLogoImage.name" :name="podcastLogoImage.id">
               <el-input placeholder="请输入宽度" v-model="podcastLogoImage.width" class="logo-attribute">
                 <template slot="prepend">Width:</template>
                 <template slot="append">vh</template>
@@ -89,11 +101,11 @@
         <el-form-item label="主题描述">
           <el-button icon="el-icon-plus" @click="addTopicDesc()" circle></el-button>
         </el-form-item>
-        <el-form-item v-for="(topicDesc, index) in topicDescList" :key="index" :label="'第'+(index+1)+'行'">
-        <div class="topic-desc-item">
+        <el-form-item v-for="(topicDesc, index) in topicDescList" :key="index" :label="'第' + (index + 1) + '行'">
+          <div class="topic-desc-item">
             <el-input v-model="topicDesc.value" />
             <el-button icon="el-icon-minus" @click="minusTopicDesc(index)" type="danger" circle></el-button>
-            </div>
+          </div>
         </el-form-item>
         <el-form-item label="字号调整（主题描述）">
           <div :span="12">
@@ -110,11 +122,7 @@
         </el-form-item>
         <el-divider></el-divider>
         <el-form-item label="直播时间">
-          <el-date-picker
-            v-model="pickerTime"
-            type="datetimerange"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
+          <el-date-picker v-model="pickerTime" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期"
             :default-time="['20:00:00', '22:00:00']">
           </el-date-picker>
         </el-form-item>
@@ -123,18 +131,48 @@
         </el-form-item>
         <el-divider></el-divider>
         <el-form-item label="直播预约">
-          
+          <el-button icon="el-icon-plus" @click="addLiveRoomQR()" circle></el-button>
+        </el-form-item>
+        <el-form-item label="">
+          <el-collapse v-model="activeLiveRoomQRList" class="podcast-logo-edit-panel">
+            <el-collapse-item v-for="(liveRoom, index) in entireLiveRoomQRList" :title="liveRoom.name" :name="index">
+            <el-input placeholder="请输入名称" v-model="liveRoom.name" class="logo-attribute">
+                <template slot="prepend">Name:</template>
+              </el-input>
+              <el-input placeholder="请输入宽度" v-model="liveRoom.width" class="logo-attribute">
+                <template slot="prepend">Width:</template>
+                <template slot="append">vh</template>
+              </el-input>
+              <el-input placeholder="请输入内容" v-model="liveRoom.height" class="logo-attribute">
+                <template slot="prepend">Height:</template>
+                <template slot="append">vh</template>
+              </el-input>
+              <el-input placeholder="请输入内容" v-model="liveRoom.bottom" class="logo-attribute">
+                <template slot="prepend">Bottom:</template>
+                <template slot="append">vh</template>
+              </el-input>
+              <el-input placeholder="请输入内容" v-model="liveRoom.left" class="logo-attribute">
+                <template slot="prepend">Left:</template>
+                <template slot="append">vh</template>
+              </el-input>
+              <el-input placeholder="请输入内容" v-model="liveRoom.qrPos" class="logo-attribute">
+                <template slot="prepend">QR:</template>
+                <template slot="append">可填入URL地址-HTTPS</template>
+              </el-input>
+              <el-button icon="el-icon-minus" @click="delLiveRoomQR(index)" type="danger" circle></el-button>
+            </el-collapse-item>
+          </el-collapse>
         </el-form-item>
         <el-divider></el-divider>
         <el-form-item>
-          <el-button type="primary" @click="download()"
-          >
+          <el-button type="primary" @click="download()">
             生成海报
           </el-button>
         </el-form-item>
 
         <el-form-item class="info">
-          <i class="el-icon-service"></i> 本工具由 <a href="https://github.com/le0zh0u">@leozhou</a> 开发，<a href="mailto:hi@leozhou.me">问题反馈</a>
+          <i class="el-icon-service"></i> 本工具由 <a href="https://github.com/le0zh0u">@leozhou</a> 开发，<a
+            href="mailto:hi@leozhou.me">问题反馈</a>
         </el-form-item>
       </el-form>
     </el-col>
@@ -183,18 +221,36 @@ type LiveRoomInfo = {
   image: ImageData
 }
 
+type LiveRoomQRDefaultPos = {
+  width: number,
+  height: number,
+  bottom: number,
+  left: number,
+}
+
+// 直播间二维码信息，用于展示
+type LiveRoomQRInfo = {
+  name: string,
+  qrPos: string,
+  width: number,
+  height: number,
+  bottom: number,
+  left: number,
+  defaultPos: LiveRoomQRDefaultPos
+};
+
 // 从数据源中导入播客数据
-function getPodcastData(raw:String): PodcastInfo[] {
+function getPodcastData(raw: String): PodcastInfo[] {
   return raw.split('\n').slice(2)
-  .filter(line => !!line)
-  .map((line) => {
-    const arr = line.split(',')
-    return {
-      id: Number(arr[0]),
-      name: arr[1],
-      logoName: arr[2],
-    }
-  })
+    .filter(line => !!line)
+    .map((line) => {
+      const arr = line.split(',')
+      return {
+        id: Number(arr[0]),
+        name: arr[1],
+        logoName: arr[2],
+      }
+    })
 }
 
 // 构建播客数据
@@ -206,12 +262,12 @@ export default Vue.extend({
       // bgURL
       bgUrl: 'poster-template.jpg', //'http://img.leozhou.me/picGo/技术播客月直播预告.png',
       // 串台主题
-      topic: '', 
+      topic: '',
       // 主题描述
-      topicDescList: [{value:''}],
+      topicDescList: [{ value: '' }],
       // 直播时间
       time: '',
-      pickerTime:[],
+      pickerTime: [],
       // 主题文字缩放
       topicFontSize: 1,
       topicDescFontSize: 1,
@@ -227,17 +283,29 @@ export default Vue.extend({
       podcastLogoImageList: [] as PodcastLogoInfo[],
       // 展开的播客logo编辑
       activePodcastLogos: [],
+
+      // 全程直播间信息
+      activeLiveRoomQRList: [],
+      entireLiveRoomQRList: [] as LiveRoomQRInfo[],
+      liveRoomCount: 0,
+
+      // 单场
+      singleLiveRoomQRList: [] as LiveRoomQRInfo[],
+      liveRoomQRPannelHeight: 10,
     };
+  },
+  created() {
+    this.generateEntireLiveRoomData()
   },
 
   watch: {
     // 如果选中的播客发生变化，需要重新构建播客logo的配置
     podcastList(newList, oldList) {
-      if(newList == oldList) return ;
+      if (newList == oldList) return;
       const length = newList.length
-      const list:PodcastLogoInfo[] = newList.sort((a:number, b:number) => {
+      const list: PodcastLogoInfo[] = newList.sort((a: number, b: number) => {
         return a - b
-      }).map((item:number, index:number) => {
+      }).map((item: number, index: number) => {
         const podcast = podcastInfoList.filter(podcastInfo => {
           return podcastInfo.id === item
         })
@@ -246,21 +314,31 @@ export default Vue.extend({
 
       this.podcastLogoImageList = list
     },
+    // entireLiveRoomQRList(newList, oldList) {
+    //   if (newList == oldList) return;
+    //   if (newList.length == oldList.length) return;
+    //   this.liveRoomCount = newList.length;
+    //   console.log('entireLiveRoomQRList changed', this.liveRoomCount)
+    // },
+    // liveRoomCount(newVal, oldVal) {
+
+    //   this.recalLiveRoomPos(newVal)
+    // },
     // 如果时间选择发生变化，格式化时间
-    pickerTime(newTimeArr, oldTimeArr){
-      if(newTimeArr == oldTimeArr) return 
+    pickerTime(newTimeArr, oldTimeArr) {
+      if (newTimeArr == oldTimeArr) return
 
       const startTime = moment(newTimeArr[0]).format('YYYY/MM/DD HH:mm')
       var endTime = ''
-      if(moment(newTimeArr[0]).diff(moment(newTimeArr[1]),'days') == 0){
+      if (moment(newTimeArr[0]).diff(moment(newTimeArr[1]), 'days') == 0) {
         // 同一天
-         endTime = moment(newTimeArr[1]).format('HH:mm')
+        endTime = moment(newTimeArr[1]).format('HH:mm')
       } else {
         endTime = moment(newTimeArr[1]).format('MM/DD HH:mm')
       }
-      
+
       this.time = startTime + " - " + endTime
-      
+
     }
   },
   mounted() {
@@ -268,30 +346,123 @@ export default Vue.extend({
 
   computed: {
     // 用于下拉框
-    podcastSelectorList(){
+    podcastSelectorList() {
       return podcastInfoList
     },
   },
 
   methods: {
 
+    recalLiveRoomPos() {
+
+      const listLen = this.entireLiveRoomQRList.length
+
+      const bottom = 21
+      var sideLen = 8
+      var left = 4
+      var splitSpace = 1
+      const maxWidth = 71
+
+      var basicLen = (left - splitSpace) + (sideLen + splitSpace) * listLen + left
+      // console.log('basicLen - ', basicLen)
+      if (basicLen > maxWidth) {
+        // 比预计长，缩小边长
+        const contentWidth = maxWidth - left - left + splitSpace
+        sideLen = contentWidth / listLen - splitSpace
+      } else {
+        // const contentWidth = (sideLen + splitSpace) * listLen - splitSpace
+        let space = (maxWidth - (2 * left) - (listLen * sideLen)) / (listLen - 1)
+        if (space > 4) {
+          splitSpace = (maxWidth - (listLen * sideLen)) / (listLen + 1)
+          left = splitSpace
+        } else {
+          splitSpace = space
+        }
+        // console.log('splitSpace - ', splitSpace)
+      }
+
+      var list = this.entireLiveRoomQRList.map((item: LiveRoomQRInfo, index: number) => {
+        item.left = left + (sideLen + splitSpace) * index
+        item.width = sideLen
+        item.height = sideLen
+        return item
+      })
+
+      this.entireLiveRoomQRList = list
+      this.liveRoomQRPannelHeight = sideLen + 3
+
+    },
+
+    generateEntireLiveRoomData() {
+
+      const bottom = 21
+      const width = 8
+      const height = 8
+      const letf = 4
+
+      const splitSpace = 1
+
+      // CSDN
+      const csdn = {
+        name: "CSDN",
+        qrPos: "http://img.leozhou.me/picGo/20220628185843.png",
+        width: width,
+        height: height,
+        bottom: bottom,
+        left: letf,
+      }
+      this.entireLiveRoomQRList.push(csdn as LiveRoomQRInfo)
+      // huodongxing
+      const huodongxing = {
+        name: "活动行",
+        qrPos: "http://img.leozhou.me/picGo/20220628185843.png",
+        width: width,
+        height: height,
+        bottom: bottom,
+        left: letf + (splitSpace + width),
+      }
+      this.entireLiveRoomQRList.push(huodongxing as LiveRoomQRInfo)
+      // 开源
+      const oschina = {
+        name: "OSChina",
+        qrPos: "http://img.leozhou.me/picGo/20220628185843.png",
+        width: width,
+        height: height,
+        bottom: bottom,
+        left: letf + (splitSpace + width) * 2,
+      }
+      this.entireLiveRoomQRList.push(oschina as LiveRoomQRInfo)
+      // 思否
+      const segmentfault = {
+        name: "思否",
+        qrPos: "http://img.leozhou.me/picGo/20220628185843.png",
+        width: width,
+        height: height,
+        bottom: bottom,
+        left: letf + (splitSpace + width) * 3,
+      }
+      this.entireLiveRoomQRList.push(segmentfault as LiveRoomQRInfo)
+
+      this.recalLiveRoomPos()
+    },
+
     //生成logo的位置
-    genLogoPos(podcastInfo: PodcastInfo, index:number, podcastNum: number){
+    genLogoPos(podcastInfo: PodcastInfo, index: number, podcastNum: number) {
       const logDefaultPos: PodcastLogoDefaultPos = {
         width: 16,//417 * 100 / 2208,
         height: 16,//417 * 100 / 2208,
         top: 170 / 718 * 100,//373 / 2208 * 100,
-        left: 486/864/2 * 100,//100 / 2208 * 1242,
+        left: 486 / 864 / 2 * 100,//100 / 2208 * 1242,
       }
 
-      if(podcastNum === 1){
+      if (podcastNum === 1) {
         // none
-      } else if(podcastNum === 2){
+      } else if (podcastNum === 2) {
         logDefaultPos.left = 70 / 508 * 100 + (16 + 11) * index
-      } else if(podcastNum === 3) {
-        if(index == 0){
+      } else if (podcastNum === 3) {
+        if (index == 0) {
           logDefaultPos.left = 8
-        } else if(index == 1){
+        } else if (index == 1) {
           // logDefaultPos.left =42
         } else {
           logDefaultPos.left = 486 / 864 * 100 - 8
@@ -299,16 +470,16 @@ export default Vue.extend({
       }
 
       return {
-          id: podcastInfo.id,
-          name: podcastInfo.name,
-          logoPos: 'logos/'+podcastInfo.logoName,
-          width: logDefaultPos.width,//417 * 100 / 2208,
-          height: logDefaultPos.height,//417 * 100 / 2208,
-          top: logDefaultPos.top,//373 / 2208 * 100,
-          left: logDefaultPos.left,//100 / 2208 * 1242,
-          logoZoom: 1,
-          defaultPos: logDefaultPos
-        }
+        id: podcastInfo.id,
+        name: podcastInfo.name,
+        logoPos: 'logos/' + podcastInfo.logoName,
+        width: logDefaultPos.width,//417 * 100 / 2208,
+        height: logDefaultPos.height,//417 * 100 / 2208,
+        top: logDefaultPos.top,//373 / 2208 * 100,
+        left: logDefaultPos.left,//100 / 2208 * 1242,
+        logoZoom: 1,
+        defaultPos: logDefaultPos
+      }
     },
 
     // 生成图片并下载
@@ -326,14 +497,14 @@ export default Vue.extend({
     },
 
     // 重置图片大小
-    zoomReset(id:number) {
+    zoomReset(id: number) {
       const filterResult = this.podcastLogoImageList.filter(item => {
         return item.id === id
       })
-      if(filterResult.length == 0){
-        return 
+      if (filterResult.length == 0) {
+        return
       }
-      
+
       const logo = filterResult[0]
       logo.width = logo.defaultPos.width;
       logo.height = logo.defaultPos.height;
@@ -370,11 +541,32 @@ export default Vue.extend({
     },
 
     // 添加主题描述
-    addTopicDesc(){
-        this.topicDescList.push({value:''})
+    addTopicDesc() {
+      this.topicDescList.push({ value: '' })
     },
-    minusTopicDesc(index:number){
+    minusTopicDesc(index: number) {
       this.topicDescList.splice(index, 1)
+    },
+
+    // 添加直播二维码
+    addLiveRoomQR() {
+      const liveRoom = {
+        name: "直播间",
+        qrPos: "http://img.leozhou.me/picGo/20220628185843.png",
+        width: 8,
+        height: 9,
+        bottom: 21,
+        left: 0,
+      }
+
+      this.entireLiveRoomQRList.push(liveRoom as LiveRoomQRInfo)
+
+      this.recalLiveRoomPos()
+    },
+
+    delLiveRoomQR(index: number) {
+      this.entireLiveRoomQRList.splice(index, 1)
+      this.recalLiveRoomPos()
     }
   }
 })
@@ -387,12 +579,14 @@ export default Vue.extend({
   font-weight: bold;
   src: url(~assets/OpenSans-Bold.ttf) format('truetype');
 }
+
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: normal;
   src: url(~assets/OpenSans-Light.ttf) format('truetype');
 }
+
 @font-face {
   font-family: 'SourceHanSerifSC';
   font-style: normal;
@@ -415,68 +609,69 @@ h1 {
   font-family: 'Open Sans';
 }
 
-  #poster-preview {
-    position: relative;
-    width: max-content;
-    height: 100vh;
-    overflow: hidden;
-    -webkit-user-select: none;
-    user-select: none;
-  }
+#poster-preview {
+  position: relative;
+  width: max-content;
+  height: 100vh;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+}
 
-    .bg {
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      background: white;
-      z-index: -20;
-    }
+.bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: -20;
+}
 
-    .poster-template {
-      height: 100vh;
-    }
+.poster-template {
+  height: 100vh;
+}
 
-    .poster-content {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      padding: 46vh 3vh 0 3vh;
-      text-align: center;
-      color: #fff;
-      font-size: 2vh;
-    }
-      .podcast-logo-img{
-        position: absolute;
-        z-index: 10;
-      }
+.poster-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  padding: 46vh 0vh 0 0vh;
+  text-align: center;
+  color: #fff;
+  font-size: 2vh;
+}
 
-      .topic {
-        margin-bottom: 0.5vh;
-        font-size: 3.5vh;
-        font-weight: bold;
-        white-space: pre-line;
-        word-break: break-all;
-        word-wrap: break-word;
-      }
+.podcast-logo-img {
+  position: absolute;
+  z-index: 10;
+}
 
-      .sub-topic{
-        margin-bottom: 0.5vh;
-        font-size: 2.5vh;
-        /* font-weight: bold; */
-        white-space: pre-line;
-        word-break: break-all;
-        word-wrap: break-word;
-      }
+.topic {
+  margin-bottom: 0.5vh;
+  font-size: 3.5vh;
+  font-weight: bold;
+  white-space: pre-line;
+  word-break: break-all;
+  word-wrap: break-word;
+}
 
-      .time {
-        font-size: 2vh;
-        /* color: #fff; */
-        color: #ccc;
-      }
+.sub-topic {
+  margin-bottom: 0.5vh;
+  font-size: 2.5vh;
+  /* font-weight: bold; */
+  white-space: pre-line;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.time {
+  font-size: 2vh;
+  /* color: #fff; */
+  color: #ccc;
+}
 
 .el-form-item {
   margin-bottom: 5px;
@@ -499,7 +694,8 @@ h1 {
   margin-top: 12px;
 }
 
-.el-upload:hover .avatar-icon, a:hover .avatar-icon {
+.el-upload:hover .avatar-icon,
+a:hover .avatar-icon {
   color: #409EFF;
 }
 
@@ -509,11 +705,12 @@ h1 {
   display: block;
 }
 
-.info, .info a {
+.info,
+.info a {
   color: #aaa;
 }
 
-.logo-attribute{
+.logo-attribute {
   margin-bottom: 10px;
 }
 
@@ -525,8 +722,8 @@ h1 {
   padding: 6px;
 }
 
-.podcast-logo-edit-panel{
-  margin-top:10px
+.podcast-logo-edit-panel {
+  margin-top: 10px
 }
 
 .podcast-select {
