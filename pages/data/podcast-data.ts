@@ -7,7 +7,7 @@ id,name,logoName
 5,Go 夜聊,talkgofm.png
 6,Nelula Graph 星球,nebula-graph.png
 7,OnBoard!,onboard.jpeg
-8,Web Worker,webworker.jpg
+8,Web Worker,webworker.png
 9,编码人声,bianmarensheng-logo.png
 10,大话开源,opentekr.jpeg
 11,枫言枫语,fengyanfengyu.png
