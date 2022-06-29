@@ -405,7 +405,7 @@ export default Vue.extend({
       // CSDN
       const csdn = {
         name: "CSDN",
-        qrPos: "http://img.leozhou.me/picGo/20220628185843.png",
+        qrPos: "empty-image.png",
         width: width,
         height: height,
         bottom: bottom,
@@ -415,7 +415,7 @@ export default Vue.extend({
       // huodongxing
       const huodongxing = {
         name: "活动行",
-        qrPos: "http://img.leozhou.me/picGo/20220628185843.png",
+        qrPos: "empty-image.png",
         width: width,
         height: height,
         bottom: bottom,
@@ -425,7 +425,7 @@ export default Vue.extend({
       // 开源
       const oschina = {
         name: "OSChina",
-        qrPos: "http://img.leozhou.me/picGo/20220628185843.png",
+        qrPos: "empty-image.png",
         width: width,
         height: height,
         bottom: bottom,
@@ -435,7 +435,7 @@ export default Vue.extend({
       // 思否
       const segmentfault = {
         name: "思否",
-        qrPos: "http://img.leozhou.me/picGo/20220628185843.png",
+        qrPos: "empty-image.png",
         width: width,
         height: height,
         bottom: bottom,
@@ -552,7 +552,7 @@ export default Vue.extend({
     addLiveRoomQR() {
       const liveRoom = {
         name: "直播间",
-        qrPos: "http://img.leozhou.me/picGo/20220628185843.png",
+        qrPos: "empty-image.png",
         width: 8,
         height: 9,
         bottom: 21,
