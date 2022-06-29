@@ -402,6 +402,17 @@ export default Vue.extend({
 
       const splitSpace = 1
 
+      // 思否
+      const segmentfault = {
+        name: "思否",
+        qrPos: "empty-image.png",
+        width: width,
+        height: height,
+        bottom: bottom,
+        left: letf + (splitSpace + width) * 3,
+      }
+      this.entireLiveRoomQRList.push(segmentfault as LiveRoomQRInfo)
+
       // CSDN
       const csdn = {
         name: "CSDN",
@@ -412,6 +423,7 @@ export default Vue.extend({
         left: letf,
       }
       this.entireLiveRoomQRList.push(csdn as LiveRoomQRInfo)
+      
       // huodongxing
       const huodongxing = {
         name: "活动行",
@@ -432,16 +444,6 @@ export default Vue.extend({
         left: letf + (splitSpace + width) * 2,
       }
       this.entireLiveRoomQRList.push(oschina as LiveRoomQRInfo)
-      // 思否
-      const segmentfault = {
-        name: "思否",
-        qrPos: "empty-image.png",
-        width: width,
-        height: height,
-        bottom: bottom,
-        left: letf + (splitSpace + width) * 3,
-      }
-      this.entireLiveRoomQRList.push(segmentfault as LiveRoomQRInfo)
 
       this.recalLiveRoomPos()
     },
