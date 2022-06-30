@@ -434,16 +434,6 @@ export default Vue.extend({
         left: letf + (splitSpace + width),
       }
       this.entireLiveRoomQRList.push(huodongxing as LiveRoomQRInfo)
-      // 开源
-      const oschina = {
-        name: "OSChina",
-        qrPos: "empty-image.png",
-        width: width,
-        height: height,
-        bottom: bottom,
-        left: letf + (splitSpace + width) * 2,
-      }
-      this.entireLiveRoomQRList.push(oschina as LiveRoomQRInfo)
 
       this.recalLiveRoomPos()
     },
