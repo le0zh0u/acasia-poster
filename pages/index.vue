@@ -140,6 +140,10 @@
         <el-divider></el-divider>
         <el-form-item label="直播预约">
           <el-button icon="el-icon-plus" @click="addLiveRoomQR()" circle></el-button>
+          <el-input placeholder="直播日期" v-model="liveRoomkey" class="logo-attribute">
+            <template slot="prepend">7月:</template>
+            <template slot="append">日</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="">
           <el-collapse v-model="activeLiveRoomQRList" class="podcast-logo-edit-panel">
@@ -197,7 +201,8 @@ import VueQr from 'vue-qr';
 
 // @ts-ignore
 import domtoimage from 'retina-dom-to-image';
-import podcastDataRaw from './data/podcast-data'
+import podcastDataRaw from './data/podcast-data';
+import liveRoomDataRaw from './data/liveroom-data';
 
 
 // 播客信息 - 用于数据导出时适配试用
@@ -205,6 +210,21 @@ type PodcastInfo = {
   id: number,
   name: string,
   logoName: string
+};
+
+// 直播间数据
+type PlatformLiveRoomInfo = {
+    platform: string,
+    a: string,
+    b: string,
+    c: string,
+    d: string,
+    e: string,
+    f: string,
+    g: string,
+    h: string,
+    i: string,
+    j: string
 };
 
 // 播客logo默认配置，用于调整后恢复使用
@@ -267,8 +287,30 @@ function getPodcastData(raw: String): PodcastInfo[] {
     })
 }
 
+function getLiveRoomData(raw:String): PlatformLiveRoomInfo[] {
+  return raw.split('\n').slice(2)
+    .filter(line => !!line)
+    .map((line) => {
+      const arr = line.split(',')
+      return {
+        platform: arr[0],
+        'a': arr[1],
+        'b': arr[2],
+        'c': arr[3],
+        'd': arr[4],
+        'e': arr[5],
+        'f': arr[6],
+        'g': arr[7],
+        'h': arr[8],
+        'i': arr[9],
+        'j': arr[10]
+      }
+    })
+}
+
 // 构建播客数据
 const podcastInfoList = getPodcastData(podcastDataRaw)
+const liveRoomInfoList = getLiveRoomData(liveRoomDataRaw)
 
 export default Vue.extend({
   data() {
@@ -307,7 +349,8 @@ export default Vue.extend({
       singleLiveRoomQRList: [] as LiveRoomQRInfo[],
       liveRoomQRPannelHeight: 10,
 
-      appSrc: "http://baidu.com",
+      liveRoomkey: "4"
+
     };
   },
   created() {
@@ -355,6 +398,9 @@ export default Vue.extend({
 
       this.time = startTime + " - " + endTime
 
+    },
+    liveRoomkey(newKey, oldKey) {
+      this.generateEntireLiveRoomData()
     }
   },
   mounted() {
@@ -412,7 +458,7 @@ export default Vue.extend({
     },
 
     generateEntireLiveRoomData() {
-
+      this.entireLiveRoomQRList = [] as LiveRoomQRInfo[]
       const bottom = 21
       const width = 8
       const height = 8
@@ -421,10 +467,11 @@ export default Vue.extend({
       const splitSpace = 1
 
       // 思否
+      
       const segmentfault = {
         name: "思否",
         logoSrc: "logos/segementfault.png",
-        text:"http://www.segmentfault.com",
+        text: this.getLiveRoomMap('sifou'),
         qrPos: "empty-image.png",
         width: width,
         height: height,
@@ -437,7 +484,7 @@ export default Vue.extend({
       const csdn = {
         name: "CSDN",
         logoSrc: "logos/csdn.png",
-        text:"http://www.csdn.net",
+        text: this.getLiveRoomMap('csdn'),
         qrPos: "empty-image.png",
         width: width,
         height: height,
@@ -450,7 +497,7 @@ export default Vue.extend({
       const huodongxing = {
         name: "活动行",
         logoSrc: "logos/huodongxing.png",
-        text:"http://www.huodongxing.com",
+        text: this.getLiveRoomMap('huodongxing'),
         qrPos: "empty-image.png",
         width: width,
         height: height,
@@ -585,8 +632,41 @@ export default Vue.extend({
     delLiveRoomQR(index: number) {
       this.entireLiveRoomQRList.splice(index, 1)
       this.recalLiveRoomPos()
+    },
+
+    getLiveRoomMap(platform: string) : string {
+      //Map<String,PlatformLiveRoomInfo>
+      let map = new Map(liveRoomInfoList.map(i => [i.platform, i]))
+      let liveRoom = map.get(platform) as PlatformLiveRoomInfo
+      if(liveRoom) {
+        if(this.liveRoomkey == '4'){
+          return liveRoom.a
+        }
+        else if(this.liveRoomkey == '5'){
+          return liveRoom.b
+        }else if(this.liveRoomkey == '6'){
+          return liveRoom.c
+        }else if(this.liveRoomkey == '7'){
+          return liveRoom.d
+        }else if(this.liveRoomkey == '8'){
+          return liveRoom.e
+        }else if(this.liveRoomkey == '11'){
+          return liveRoom.f
+        }else if(this.liveRoomkey == '12'){
+          return liveRoom.g
+        }else if(this.liveRoomkey == '13'){
+          return liveRoom.h
+        }else if(this.liveRoomkey == '14'){
+          return liveRoom.i
+        }else if(this.liveRoomkey == '15'){
+          return liveRoom.j
+        }
+        
+      }
+
+      return ""
     }
-  }
+  },
 })
 </script>
 
