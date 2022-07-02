@@ -347,7 +347,7 @@ export default Vue.extend({
       singleLiveRoomQRList: [] as LiveRoomQRInfo[],
       liveRoomQRPannelHeight: 10,
 
-      liveRoomkey: "4"
+      liveRoomkey: "5"
 
     };
   },
