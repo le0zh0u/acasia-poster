@@ -1,6 +1,6 @@
 export default `
-platform,4,5,6,7,8,11,12,13,14,15
-sifou,4,5,6,7,8,11,12,13,14,15
-csdn,4,5,6,7,8,11,12,13,14,15
-huodongxing,4,5,6,7,8,11,12,13,14,15
+platform,5,6,7,8,11,12,13,14,15
+sifou,https://ke.segmentfault.com/course/1650000041983275/section/1500000042033277,https://ke.segmentfault.com/course/1650000041983275/section/1500000042033287,https://ke.segmentfault.com/course/1650000041983275/section/1500000041983286,https://ke.segmentfault.com/course/1650000041983275/section/1500000042033289,https://ke.segmentfault.com/course/1650000041983275/section/1500000042033286,https://ke.segmentfault.com/course/1650000041983275/section/1500000042033286,https://ke.segmentfault.com/course/1650000041983275/section/1500000042033484,https://ke.segmentfault.com/course/1650000041983275/section/1500000042033279,https://ke.segmentfault.com/course/1650000041983275/section/1500000042033330
+csdn,https://live.csdn.net/room/jinjinledaoFM/zv72ChkV,https://live.csdn.net/room/jinjinledaoFM/iONp3pJK,https://live.csdn.net/room/jinjinledaoFM/2UqJuHB5,8,11,12,13,14,15
+huodongxing,http://hdxu.cn/HXv8Q,http://hdxu.cn/axOEO,http://hdxu.cn/ZSeOf,http://hdxu.cn/itd07,http://hdxu.cn/FEye7,http://hdxu.cn/d8K2G,http://hdxu.cn/bBcKJ,http://hdxu.cn/RV5Am,http://hdxu.cn/Wt90o
 `

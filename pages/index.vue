@@ -223,8 +223,7 @@ type PlatformLiveRoomInfo = {
     f: string,
     g: string,
     h: string,
-    i: string,
-    j: string
+    i: string
 };
 
 // 播客logo默认配置，用于调整后恢复使用
@@ -302,8 +301,7 @@ function getLiveRoomData(raw:String): PlatformLiveRoomInfo[] {
         'f': arr[6],
         'g': arr[7],
         'h': arr[8],
-        'i': arr[9],
-        'j': arr[10]
+        'i': arr[9]
       }
     })
 }
@@ -483,7 +481,7 @@ export default Vue.extend({
       // CSDN
       const csdn = {
         name: "CSDN",
-        logoSrc: "logos/csdn.png",
+        logoSrc: "logos/csdn.jpg",
         text: this.getLiveRoomMap('csdn'),
         qrPos: "empty-image.png",
         width: width,
@@ -639,27 +637,24 @@ export default Vue.extend({
       let map = new Map(liveRoomInfoList.map(i => [i.platform, i]))
       let liveRoom = map.get(platform) as PlatformLiveRoomInfo
       if(liveRoom) {
-        if(this.liveRoomkey == '4'){
+        if(this.liveRoomkey == '5'){
           return liveRoom.a
-        }
-        else if(this.liveRoomkey == '5'){
-          return liveRoom.b
         }else if(this.liveRoomkey == '6'){
-          return liveRoom.c
+          return liveRoom.b
         }else if(this.liveRoomkey == '7'){
-          return liveRoom.d
+          return liveRoom.c
         }else if(this.liveRoomkey == '8'){
-          return liveRoom.e
+          return liveRoom.d
         }else if(this.liveRoomkey == '11'){
-          return liveRoom.f
+          return liveRoom.e
         }else if(this.liveRoomkey == '12'){
-          return liveRoom.g
+          return liveRoom.f
         }else if(this.liveRoomkey == '13'){
-          return liveRoom.h
+          return liveRoom.g
         }else if(this.liveRoomkey == '14'){
-          return liveRoom.i
+          return liveRoom.h
         }else if(this.liveRoomkey == '15'){
-          return liveRoom.j
+          return liveRoom.i
         }
         
       }
