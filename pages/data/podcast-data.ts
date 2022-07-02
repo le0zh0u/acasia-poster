@@ -9,7 +9,7 @@ id,name,logoName
 7,OnBoard!,onboard.jpeg
 8,Web Worker,webworker.png
 9,编码人声,bianmarensheng-logo.png
-10,大话开源,opentekr.jpeg
+10,大话开源,opentekr.png
 11,枫言枫语,fengyanfengyu.png
 12,后互联网时代的乱弹,the-human-future.svg
 13,开源面对面,opensource-f2f.jpeg
