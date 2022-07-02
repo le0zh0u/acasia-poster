@@ -13,7 +13,8 @@
     "element-ui": "^2.15.2",
     "moment": "^2.29.3",
     "nuxt": "^2.15.7",
-    "retina-dom-to-image": "^2.5.6"
+    "retina-dom-to-image": "^2.5.6",
+    "vue-qr": "^4.0.9"
   },
   "devDependencies": {
     "@nuxt/types": "^2.15.7",

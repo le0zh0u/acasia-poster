@@ -19,13 +19,21 @@
             v-for="(topicDesc, index) in topicDescList" :key="index" class="sub-topic"
             :style="{ 'font-size': 2.5 * topicDescFontSize + 'vh' }">{{ topicDesc.value }}</div>
           <div class="time">{{ time }}</div>
-<!-- :style="{ 'padding-left': 0 + 'vh', 'padding-right': 0 + 'vh', 'background-color': 'rgba(255, 255, 255, 0.6)', 'height': liveRoomQRPannelHeight + 'vh' }" -->
+          <!-- :auto-color="true" -->
+<!-- :logo-src="" :style="{ 'padding-left': 0 + 'vh', 'padding-right': 0 + 'vh', 'background-color': 'rgba(255, 255, 255, 0.6)', 'height': liveRoomQRPannelHeight + 'vh' }" -->
           <div class="entire-live-room-content"
             >
             <div v-for="liveRoom in entireLiveRoomQRList" v-if="entireLiveRoomQRList.length > 0"
               class="podcast-logo-img" :style="{ 'left': liveRoom.left + 'vh' , 'bottom': liveRoom.bottom + 'vh', 'background-color': 'rgba(255, 255, 255, 0.7)' }">
-              <img :src="liveRoom.qrPos" ref="avatar"
-                :style="{ 'width': liveRoom.width + 'vh', 'height': liveRoom.height + 'vh', 'left': liveRoom.left + 'vh', 'bottom': liveRoom.bottom + 'vh' }">
+              <vue-qr 
+                  :margin="10"
+                  :dot-scale="1"
+                  :text="liveRoom.text"
+                  :logo-src = "liveRoom.logoSrc"
+                   :style="{ 'width': liveRoom.width + 'vh', 'height': liveRoom.height + 'vh', 'left': liveRoom.left + 'vh', 'bottom': liveRoom.bottom + 'vh' }"
+              />
+              <!-- <img :src="liveRoom.qrPos" ref="avatar"
+                :style="{ 'width': liveRoom.width + 'vh', 'height': liveRoom.height + 'vh', 'left': liveRoom.left + 'vh', 'bottom': liveRoom.bottom + 'vh' }"> -->
               <p
                 :style="{ 'text-align': 'center', 'width': liveRoom.width + 'vh', 'color': 'black', 'margin-top': '0', 'font-size': '0.8vh','word-wrap':'break-word' }">
                 {{ liveRoom.name }}</p>
@@ -155,8 +163,11 @@
                 <template slot="prepend">Left:</template>
                 <template slot="append">vh</template>
               </el-input>
-              <el-input placeholder="请输入内容" v-model="liveRoom.qrPos" class="logo-attribute">
-                <template slot="prepend">QR:</template>
+              <el-input placeholder="请输入内容" v-model="liveRoom.text" class="logo-attribute">
+                <template slot="prepend">内容:</template>
+              </el-input>
+              <el-input placeholder="请输入内容" v-model="liveRoom.logoSrc" class="logo-attribute">
+                <template slot="prepend">Logo:</template>
                 <template slot="append">可填入URL地址-HTTPS</template>
               </el-input>
               <el-button icon="el-icon-minus" @click="delLiveRoomQR(index)" type="danger" circle></el-button>
@@ -182,6 +193,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment from 'moment';
+import VueQr from 'vue-qr';
 
 // @ts-ignore
 import domtoimage from 'retina-dom-to-image';
@@ -231,6 +243,8 @@ type LiveRoomQRDefaultPos = {
 // 直播间二维码信息，用于展示
 type LiveRoomQRInfo = {
   name: string,
+  text: string,
+  logoSrc: string,
   qrPos: string,
   width: number,
   height: number,
@@ -292,6 +306,8 @@ export default Vue.extend({
       // 单场
       singleLiveRoomQRList: [] as LiveRoomQRInfo[],
       liveRoomQRPannelHeight: 10,
+
+      appSrc: "http://baidu.com",
     };
   },
   created() {
@@ -350,7 +366,9 @@ export default Vue.extend({
       return podcastInfoList
     },
   },
-
+  components: {
+      VueQr 
+  },
   methods: {
 
     recalLiveRoomPos() {
@@ -405,6 +423,8 @@ export default Vue.extend({
       // 思否
       const segmentfault = {
         name: "思否",
+        logoSrc: "logos/segementfault.png",
+        text:"http://www.segmentfault.com",
         qrPos: "empty-image.png",
         width: width,
         height: height,
@@ -416,6 +436,8 @@ export default Vue.extend({
       // CSDN
       const csdn = {
         name: "CSDN",
+        logoSrc: "logos/csdn.png",
+        text:"http://www.csdn.net",
         qrPos: "empty-image.png",
         width: width,
         height: height,
@@ -427,6 +449,8 @@ export default Vue.extend({
       // huodongxing
       const huodongxing = {
         name: "活动行",
+        logoSrc: "logos/huodongxing.png",
+        text:"http://www.huodongxing.com",
         qrPos: "empty-image.png",
         width: width,
         height: height,
@@ -545,6 +569,8 @@ export default Vue.extend({
       const liveRoom = {
         name: "直播间",
         qrPos: "empty-image.png",
+        logoSrc: "",
+        text:"https://github.com/opensource-f2f/episode/issues/96",
         width: 8,
         height: 9,
         bottom: 21,
