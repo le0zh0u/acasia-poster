@@ -131,7 +131,7 @@
         <el-divider></el-divider>
         <el-form-item label="直播时间">
           <el-date-picker v-model="pickerTime" type="datetimerange" start-placeholder="开始日期" end-placeholder="结束日期"
-            :default-time="['20:00:00', '22:00:00']">
+            :default-time="['20:00:00', '21:00:00']">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="直播时间展示">
