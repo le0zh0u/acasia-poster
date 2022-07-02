@@ -395,6 +395,9 @@ export default Vue.extend({
       }
 
       this.time = startTime + " - " + endTime
+      const day = moment(newTimeArr[0]).format('DD')
+      var a = + day
+      this.liveRoomkey = String(a)
 
     },
     liveRoomkey(newKey, oldKey) {
@@ -465,44 +468,52 @@ export default Vue.extend({
       const splitSpace = 1
 
       // 思否
-      
-      const segmentfault = {
-        name: "思否",
-        logoSrc: "logos/segementfault.png",
-        text: this.getLiveRoomMap('sifou'),
-        qrPos: "empty-image.png",
-        width: width,
-        height: height,
-        bottom: bottom,
-        left: letf + (splitSpace + width) * 3,
+      const sifouUrl = this.getLiveRoomMap('sifou')
+      if(sifouUrl && sifouUrl.length > 5) {
+        const segmentfault = {
+          name: "思否",
+          logoSrc: "logos/segementfault.png",
+          text: sifouUrl,
+          qrPos: "empty-image.png",
+          width: width,
+          height: height,
+          bottom: bottom,
+          left: letf + (splitSpace + width) * 3,
+        }
+        this.entireLiveRoomQRList.push(segmentfault as LiveRoomQRInfo)
       }
-      this.entireLiveRoomQRList.push(segmentfault as LiveRoomQRInfo)
 
       // CSDN
-      const csdn = {
-        name: "CSDN",
-        logoSrc: "logos/csdn.jpg",
-        text: this.getLiveRoomMap('csdn'),
-        qrPos: "empty-image.png",
-        width: width,
-        height: height,
-        bottom: bottom,
-        left: letf,
+      const csdnUrl = this.getLiveRoomMap('csdn')
+      if(csdnUrl && csdnUrl.length > 5) {
+        const csdn = {
+          name: "CSDN",
+          logoSrc: "logos/csdn.jpg",
+          text: csdnUrl,
+          qrPos: "empty-image.png",
+          width: width,
+          height: height,
+          bottom: bottom,
+          left: letf,
+        }
+        this.entireLiveRoomQRList.push(csdn as LiveRoomQRInfo)
       }
-      this.entireLiveRoomQRList.push(csdn as LiveRoomQRInfo)
       
       // huodongxing
-      const huodongxing = {
-        name: "活动行",
-        logoSrc: "logos/huodongxing.png",
-        text: this.getLiveRoomMap('huodongxing'),
-        qrPos: "empty-image.png",
-        width: width,
-        height: height,
-        bottom: bottom,
-        left: letf + (splitSpace + width),
+      const hdxUrl = this.getLiveRoomMap('huodongxing')
+      if(hdxUrl && hdxUrl.length > 5) {
+        const huodongxing = {
+          name: "活动行",
+          logoSrc: "logos/huodongxing.png",
+          text: hdxUrl,
+          qrPos: "empty-image.png",
+          width: width,
+          height: height,
+          bottom: bottom,
+          left: letf + (splitSpace + width),
+        }
+        this.entireLiveRoomQRList.push(huodongxing as LiveRoomQRInfo)
       }
-      this.entireLiveRoomQRList.push(huodongxing as LiveRoomQRInfo)
 
       this.recalLiveRoomPos()
     },
