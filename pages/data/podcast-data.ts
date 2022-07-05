@@ -17,5 +17,5 @@ id,name,logoName
 15,科技乱炖,kejiluandun.png
 16,陪你看开源,peinikankaiyuan.jpeg
 17,一派·Podcast,yipai.jpg
-18,质量三人行,zhiliangsanrenxing.jpeg
+18,质量三人行,zhiliangsanrenxing.jpg
 `
